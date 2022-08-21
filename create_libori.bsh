@@ -1,0 +1,37 @@
+#!/bin/bash
+
+# bash script for the compilation of the modules to generate library files
+
+echo 
+echo "============ CREACIO LLIBRERIA ORI_MODULES (gfortran) ==============="
+echo 
+
+sfile="mod_Aux.f95 mod_Cella.f95 mod_2Ddata.f95"
+ofile="mod_Aux.o mod_Cella.o mod_2Ddata.o"
+mfile="mod_aux.mod mod_cella.mod mod_2ddata.mod"
+ddir32="./lin32/"
+ddir64="./lin64/"
+libfile32=libori_mod_32.a
+libfile64=libori_mod_64.a
+
+# -- RELEASE, 32BITS
+CFLAGS32=" -Ofast -c -static -static-libgfortran -m32 "
+LFLAGS32=" crs "
+
+# -- RELEASE, 64BITS
+CFLAGS64=" -Ofast -c -static -static-libgfortran "
+LFLAGS64=" crs "
+
+echo .. compiling 32bit library: $libfile32 to $ddir32
+gfortran $CFLAGS32 $sfile 
+ar $LFLAGS32 $libfile32 $ofile
+mv $mfile $ddir32
+mv $libfile32 $ddir32
+
+echo .. compiling 64bit library: $libfile64 to $ddir64
+gfortran $CFLAGS64 $sfile
+ar $LFLAGS64 $libfile64 $ofile
+mv $mfile $ddir64
+mv $libfile64 $ddir64
+
+echo "======================   DONE   ========================="
